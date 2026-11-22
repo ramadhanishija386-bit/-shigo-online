@@ -1,0 +1,15 @@
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import pg from 'pg';
+const {Pool}=pg;
+const app=express();
+app.use(cors({origin:process.env.CORS_ORIGIN||'*'}));
+app.use(express.json());
+const pool=new Pool({connectionString:process.env.DATABASE_URL,ssl:process.env.DATABASE_URL?.includes('sslmode=require')?{rejectUnauthorized:false}:undefined});
+app.get('/',(_req,res)=>res.send('ShiGo API is running. 💚🧡'));
+app.get('/health',(_req,res)=>res.json({ok:true,app:'ShiGo'}));
+app.get('/api/orders',async(_req,res)=>{try{const r=await pool.query('SELECT * FROM orders ORDER BY id DESC');res.json(r.rows);}catch(e){res.status(500).json({error:'Database unavailable'});}});
+app.post('/api/orders',async(req,res)=>{const {service,pickup,destination,customer_name,phone,details}=req.body||{};if(!service||!pickup||!destination||!customer_name||!phone)return res.status(400).json({error:'service, pickup, destination, customer_name and phone are required'});try{const r=await pool.query('INSERT INTO orders(service,pickup,destination,customer_name,phone,details) VALUES($1,$2,$3,$4,$5,$6) RETURNING *',[service,pickup,destination,customer_name,phone,details||null]);res.status(201).json(r.rows[0]);}catch(e){res.status(500).json({error:'Could not create order'});}});
+app.patch('/api/orders/:id/status',async(req,res)=>{const {status,driver_name}=req.body||{};if(!['pending','accepted','completed','cancelled'].includes(status))return res.status(400).json({error:'Invalid status'});try{const r=await pool.query('UPDATE orders SET status=$1,driver_name=COALESCE($2,driver_name) WHERE id=$3 RETURNING *',[status,driver_name||null,req.params.id]);if(!r.rowCount)return res.status(404).json({error:'Order not found'});res.json(r.rows[0]);}catch(e){res.status(500).json({error:'Could not update order'});}});
+const port=process.env.PORT||3000;app.listen(port,()=>console.log(`ShiGo listening on ${port}`));
