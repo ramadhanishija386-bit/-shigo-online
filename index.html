@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShiGo Online</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f8f5;color:#222}
+header{background:#087a45;color:white;padding:22px;text-align:center}
+.logo{font-size:34px;font-weight:bold}
+.logo span{color:#ff982d}
+main{max-width:430px;margin:35px auto;padding:20px}
+.card{background:white;padding:25px;border-radius:16px;box-shadow:0 3px 15px #ddd}
+h2{color:#087a45;text-align:center}
+p{text-align:center;color:#666}
+input{width:100%;padding:14px;margin:9px 0;border:1px solid #ccc;border-radius:8px;font-size:16px}
+button{width:100%;padding:14px;background:#087a45;color:white;border:0;border-radius:8px;font-size:17px;font-weight:bold;margin-top:12px}
+.switch{color:#087a45;cursor:pointer;font-weight:bold}
+.orange{background:#f28c28}
+.hidden{display:none}
+footer{text-align:center;color:#777;padding:20px;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">Shi<span>Go</span></div>
+<p style="color:white">Transport & Delivery Platform</p>
+</header>
+<main>
+<div class="card" id="login">
+<h2>Karibu ShiGo!</h2>
+<p>Ingia kwenye akaunti yako</p>
+<form onsubmit="event.preventDefault();alert('Login itaunganishwa na mfumo wa akaunti katika hatua inayofuata.')">
+<input type="email" placeholder="Barua pepe" required>
+<input type="password" placeholder="Nenosiri" required>
+<button>LOGIN</button>
+</form>
+<p>Huna akaunti? <span class="switch" onclick="showRegister()">Jisajili hapa</span></p>
+</div>
+
+<div class="card hidden" id="register">
+<h2>Fungua Akaunti</h2>
+<p>Jiunge na huduma za ShiGo</p>
+<form onsubmit="event.preventDefault();alert('Usajili utaunganishwa na Backend katika hatua inayofuata.')">
+<input type="text" placeholder="Jina kamili" required>
+<input type="email" placeholder="Barua pepe" required>
+<input type="tel" placeholder="Namba ya simu" required>
+<input type="password" placeholder="Tengeneza nenosiri" required>
+<button class="orange">REGISTER</button>
+</form>
+<p>Tayari una akaunti? <span class="switch" onclick="showLogin()">Ingia hapa</span></p>
+</div>
+</main>
+<footer>© 2026 ShiGo Online. All Rights Reserved.</footer>
+<script>
+function showRegister(){
+document.getElementById('login').classList.add('hidden');
+document.getElementById('register').classList.remove('hidden');
+}
+function showLogin(){
+document.getElementById('register').classList.add('hidden');
+document.getElementById('login').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
